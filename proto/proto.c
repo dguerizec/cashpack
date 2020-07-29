@@ -58,7 +58,15 @@ const char hblock[] = {
     0x74, 0x68, 0x65, 0x6e, 0x74,
     0x69, 0x63, 0x61, 0x74, 0x65,
     0x2f, 0x75, 0x73, 0x65, 0x72,
-    0x6e, 0x61, 0x6d, 0x65
+    0x6e, 0x61, 0x6d, 0x65,
+    // [+65] indexed header (*unknown*: *unknown*)
+    0xc3,
+    // [+66] indexed header (*unknown*: *unknown*)
+    0xc2,
+    // [+67] indexed header (*unknown*: *unknown*)
+    0xff, 0x02,
+    // [+69] indexed header (*unknown*: *unknown*)
+    0xc5,
 };
 
 struct header {
@@ -105,7 +113,8 @@ void callback(enum hpack_event_e evt, const char *buf, size_t size, void *priv) 
         name = buf;
         sz = size;
     } else if(evt == HPACK_EVT_VALUE) {
-        if(prv->errptr && !(name == hpack_unknown_name || buf == hpack_unknown_value)) {
+        if(prv->errptr) {
+            //if(name == hpack_unknown_name || buf == hpack_unknown_value) {
             printf("E: %*s: %*s    [%d/%d]\n", sz, name, size, buf, name == hpack_unknown_name, buf == hpack_unknown_value);
             //exit(1);
         }
